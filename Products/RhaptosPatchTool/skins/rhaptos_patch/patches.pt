@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"
+      xmlns:metal="http://xml.zope.org/namespaces/metal" 
+      xmlns:tal="http://xml.zope.org/namespaces/tal" 
+      metal:use-macro="here/main_template/macros/master"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="rhaptos">
+
+  <body>
+
+    <tal:block metal:fill-slot="css_slot">
+    <style>
+      table.listing tr.odd.pending {
+          background: transparent; 
+      }
+
+      table.listing tr.even.pending {
+          background: #FFE0E0;
+      }
+
+      table.listing th.pending {
+          background: #FFE0E0;
+          border-top: 1px solid #85A6CC;
+          border-bottom: 1px solid #85A6CC;
+          border-right: 1px solid #85A6CC;
+      }
+
+      table.listing th.pending.top {
+          border-top: 3px double #85A6CC;
+      }
+
+      table.listing tr.accepted {
+          background: #DCEDD0;
+      }
+
+      table.listing tr.rejected {
+          background: #F4C8C8;
+      }
+      .none {
+        margin-left: 1em;
+      }
+    </style>
+    </tal:block>
+
+    <div metal:fill-slot="main" 
+         tal:define="pt here/portal_patch;
+                     mt here/portal_moduledb;
+                     my_content python:[m.objectId for m in mt.sqlGetModulesByRole(user=user.getUserName(),role='maintainer')];
+                     pending python:my_content and pt.searchPatches(orig_id=my_content, review_state='submitted') ">
+ 
+      <h1 i18n:translate="heading_patches_suggested">Suggested Edits</h1>
+
+      <h2 i18n:translate="heading_patches_suggested_to_you" 
+	tal:attributes="style python:test(pending,'border-bottom: 0px',nothing)">Suggested edits to your content</h2>
+
+      <p class="none" tal:condition="not:pending">
+	<i i18n:translate="text_none">None</i>
+      </p>
+      
+      <table tal:condition="pending" class="listing">
+	<tr>
+	  <th i18n:translate="listingheader_edit">Edit</th>
+	  <th i18n:translate="listingheader_original">Original</th>
+	  <th i18n:translate="listingheader_submitter">Submitter</th>
+	  <th i18n:translate="listingheader_date">Date</th>
+	  <th i18n:translate="listingheader_message">Message</th>
+	  <th i18n:translate="listingheader_status">Status</th>
+	</tr>
+        <tr tal:repeat="req pending"
+	  tal:attributes="class python:test(path('repeat/req/odd'),'odd','even')" >
+          <tal:block tal:define="obj req/getObject;
+	                         m python:here.content.getRhaptosObject(obj.orig_id, obj.orig_version);
+                                 getInfoFor python:here.portal_workflow.getInfoFor">
+	    <td><a href="" tal:attributes="href string:${obj/absolute_url}/patch_view" 
+		i18n:translate="label_patch_view">View</a></td>
+	    <td><a href="" tal:attributes="href m/absolute_url" tal:content="m/title">[Object]</a></td>
+	    <td>
+	      <tal:badauthor tal:define="user python:here.desecured.getMemberById(getInfoFor(obj, 'actor'))"
+		tal:on-error="string:(${user/id})">
+		<a tal:content="python:user.getProperty('fullname')"
+		  tal:attributes="href string:/member_profile/${user/id}">[submitter]</a>
+	      </tal:badauthor></td>
+	    <td tal:content="python:getInfoFor(obj, 'time').aCommon()">[time]</td>
+	    <td class="status" tal:content="python:getInfoFor(obj,'comments')">[message]</td>
+	    <td class="private">
+	      <span tal:define="review_state python:getInfoFor(obj, 'review_state')"
+                    tal:content="structure review_state/capitalize"
+                    i18n:translate=""
+		    tal:attributes="class python:test(review_state, review_state, 'private')">&#160;</span>
+	    </td>
+
+          </tal:block>
+        </tr>
+      </table>
+
+      <tal:block tal:define="patches python:pt.searchPatches(Creator=user.getUserName());">
+	
+	<h2 i18n:translate="heading_patches_suggested_from_you">Edits you've suggested to others</h2>
+
+	<p class="none" tal:condition="not:patches">
+	  <i i18n:translate="text_none">None</i>
+	</p>
+
+	<table tal:condition="patches" class="listing">
+	  <tr>
+	    <th i18n:translate="listingheader_edit">Edit</th>
+	    <th i18n:translate="listingheader_original">Original</th>
+	    <th i18n:translate="listingheader_reviewer">Reviewer</th>
+	    <th i18n:translate="listingheader_date">Date</th>
+	    <th i18n:translate="listingheader_message">Message</th>
+	    <th i18n:translate="listingheader_status">Status</th>
+	  </tr>
+	  <tr tal:repeat="req patches"
+	      tal:attributes="class python:test(path('repeat/req/odd'),'odd','even')" >
+	    <tal:block tal:define="obj req/getObject;
+	                           m python:here.content.getRhaptosObject(obj.orig_id, obj.orig_version);
+                                   getInfoFor python:here.portal_workflow.getInfoFor;
+	                           review_state python:getInfoFor(obj, 'review_state')">
+	    <td><a href="" tal:attributes="href string:${obj/absolute_url}/patch_view" 
+		  i18n:translate="label_patch_view">View</a></td>
+	    <td><a href="" tal:attributes="href m/absolute_url" tal:content="m/title">[Object]</a></td>
+	    <td>
+		<tal:badauthor tal:define="user python:here.desecured.getMemberById(getInfoFor(obj, 'actor'));"
+		  tal:on-error="string:(${user/id})">
+		  <a tal:define="name python:user.getProperty('fullname')"
+		    tal:content="python:test(review_state=='submitted', '', name)"
+		    tal:attributes="href string:/member_profile/${user/id}">[reviewer]</a>
+		</tal:badauthor></td>
+	    <td tal:content="python:getInfoFor(obj, 'time').aCommon()"></td>
+	    <td class="status" tal:content="python:getInfoFor(obj,'comments')">[message]</td>
+	    <td class="private">
+	      <span tal:content="structure review_state/capitalize"
+                    i18n:translate=""
+		    tal:attributes="class python:test(review_state, review_state, 'private')"
+		    >&#160;</span>
+	    </td>
+
+          </tal:block>
+        </tr>
+      </table>
+
+      </tal:block>        
+  </div><!-- End of slot -->
+</body>  
+</html>

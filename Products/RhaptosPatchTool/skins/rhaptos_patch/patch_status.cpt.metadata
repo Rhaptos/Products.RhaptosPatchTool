@@ -1,0 +1,9 @@
+[default]
+title = Patch Status
+
+[validators]
+validators = validate_patch_message
+
+[actions]
+action.success = traverse_to:string:patch_update
+action.failure = traverse_to:string:patch_status

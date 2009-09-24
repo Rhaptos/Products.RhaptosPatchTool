@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      i18n:domain="rhaptos"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+
+  <body>
+
+    <div metal:define-macro="portlet"
+         tal:define="pt here/portal_patch; 
+                     u user/getUserName;
+                     mt here/portal_moduledb;      
+                     my_content python:[m.moduleid for m in mt.sqlGetModulesByRole(user=u,role='maintainer')];
+                     pending python:my_content and pt.searchPatches(orig_id=my_content, 
+                                                                    review_state='pending', 
+                                                                    sort_on='Date',
+                                                                    sort_order='reverse')[:5]"
+         tal:condition="python:not(here.portal_membership.isAnonymousUser()) and pending">
+      
+      <dl class="portlet">
+	
+        <dt class="portletHeader">
+          <span class="portletTopLeft"></span>
+          <span i18n:translate="box_heading_patches_slot">Patches</span>
+          <span class="portletTopRight"></span>
+        </dt>
+
+        <tal:block tal:repeat="patch pending">
+          <dd tal:define="obj patch/getObject;
+            oddrow repeat/patch/odd"
+            tal:attributes="class python:test(oddrow, 'portletItem even', 'portletItem odd')">
+            <a tal:attributes="href patch/getURL" tal:content="patch/Title">[patch]</a>
+            <div class="portletDetails"
+              tal:content="python:here.toLocalizedTime(here.portal_workflow.getInfoFor(obj, 'time'))">July 7, 08:11</div>
+          </dd>
+        </tal:block>
+        <dd tal:define="oddrow python:len(pending) % 2"
+          tal:attributes="class python:test(oddrow, 'portletItem even', 'portletItem odd')">
+          <strong><a tal:attributes="href string:${portal_url}/patches" href="/patches" 
+              i18n:translate="box_label_patches_view_all">View All</a></strong>
+        </dd>
+      </dl>
+    </div>
+  </body>
+</html>
+

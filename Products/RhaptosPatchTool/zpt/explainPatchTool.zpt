@@ -1,0 +1,17 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:metal="http://xml.zope.org/namespaces/metal" 
+      xmlns:tal="http://xml.zope.org/namespaces/tal" 
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      xml:lang="en-US" lang="en-US" tal:omit-tag="">
+  <span tal:replace="structure here/manage_page_header">Header</span>
+  <span tal:define="manage_tabs_message options/manage_tabs_message | nothing"
+    tal:replace="structure here/manage_tabs">Tabs</span>
+
+  <h3 i18n:translate=""><code>portal_patch</code> Tool</h3>
+    
+  <p i18n:translate="">This tool allows users to submit patches to published content
+    items without modifying them</p>
+
+  
+  <span tal:replace="structure here/manage_page_footer">Footer</span>
+</html>
