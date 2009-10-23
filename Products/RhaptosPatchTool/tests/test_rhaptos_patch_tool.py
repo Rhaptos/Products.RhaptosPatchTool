@@ -26,13 +26,18 @@ $Id: $
 
 import Products.RhaptosPatchTool
 
-from Products.RhaptosTest import base
+from Products.RhaptosTest.base import RhaptosTestCase
 
 
-class TestRhaptosPatchTool(base.RhaptosTestCase):
+class TestRhaptosPatchTool(RhaptosTestCase):
 
-    def test_pass(self):
-        assert 1 == 1
+    products_to_load_zcml = [('configure.zcml', Products.RhaptosPatchTool),]
+
+    def setUp(self):
+        RhaptosTestCase.setUp(self)
+
+    def test_patch_tool(self):
+        self.assertEqual(1, 1)
 
 
 def test_suite():
