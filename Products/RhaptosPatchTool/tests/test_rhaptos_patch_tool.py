@@ -27,8 +27,11 @@ $Id: $
 from Products.RhaptosTest import config
 import Products.RhaptosPatchTool
 config.products_to_load_zcml = [('configure.zcml', Products.RhaptosPatchTool),]
-config.products_to_install = ['RhaptosPatchTool']
-config.extension_profiles = ['Products.RhaptosPatchTool:default']
+config.products_to_install = ['RhaptosModuleStorage', 'RhaptosPatchTool',]
+config.extension_profiles = [
+    'Products.RhaptosModuleStorage:default',
+    'Products.RhaptosPatchTool:default',
+]
 
 from Products.CMFCore.utils import getToolByName
 from Products.RhaptosPatchTool.PatchWorkflow import createPatchWorkflow
