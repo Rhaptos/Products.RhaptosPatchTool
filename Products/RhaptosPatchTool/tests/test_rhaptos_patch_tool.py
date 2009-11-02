@@ -28,6 +28,7 @@ from Products.RhaptosTest import config
 import Products.RhaptosPatchTool
 config.products_to_load_zcml = [('configure.zcml', Products.RhaptosPatchTool),]
 config.products_to_install = ['RhaptosPatchTool']
+config.extension_profiles = ['Products.RhaptosPatchTool:default']
 
 from Products.RhaptosTest import base
 
