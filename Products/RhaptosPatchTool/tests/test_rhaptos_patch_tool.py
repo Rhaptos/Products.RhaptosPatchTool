@@ -30,13 +30,14 @@ config.products_to_load_zcml = [('configure.zcml', Products.RhaptosPatchTool),]
 config.products_to_install = ['RhaptosPatchTool']
 config.extension_profiles = ['Products.RhaptosPatchTool:default']
 
+from Products.CMFCore.utils import getToolByName
 from Products.RhaptosTest import base
 
 
 class TestRhaptosPatchTool(base.RhaptosTestCase):
 
     def afterSetUp(self):
-        pass
+        self.patch_tool = getToolByName(self.portal, 'portal_patch')
 
     def beforeTearDown(self):
         pass
