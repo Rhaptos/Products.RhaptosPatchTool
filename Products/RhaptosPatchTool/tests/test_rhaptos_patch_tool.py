@@ -31,6 +31,7 @@ config.products_to_install = ['RhaptosPatchTool']
 config.extension_profiles = ['Products.RhaptosPatchTool:default']
 
 from Products.CMFCore.utils import getToolByName
+from Products.RhaptosPatchTool.PatchWorkflow import createPatchWorkflow
 from Products.RhaptosTest import base
 
 
@@ -44,6 +45,9 @@ class TestRhaptosPatchTool(base.RhaptosTestCase):
 
     def test_patch_tool(self):
         self.assertEqual(1, 1)
+
+    def test_patch_workflow(self):
+        workflow = createPatchWorkflow('workflow')
 
 
 def test_suite():
