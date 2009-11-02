@@ -48,6 +48,7 @@ class TestRhaptosPatchTool(base.RhaptosTestCase):
 
     def test_patch_workflow(self):
         workflow = createPatchWorkflow('workflow')
+        self.assertEqual(workflow.transitions.objectIds(), ['apply', 'submit', 'reject'])
 
 
 def test_suite():
