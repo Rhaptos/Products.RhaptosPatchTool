@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<dc-workflow workflow_id="patch_workflow"
+             title="Patch Workflow [Rhaptos]"
+             state_variable="review_state"
+             initial_state="created">
+ <state state_id="applied" title="Accepted by a reviwer">
+  <description>The patch has been accepted and applied to a working copy of the content item.  The changes will not be public, however, until the item is published</description>
+ </state>
+ <state state_id="created" title="Newly created">
+  <exit-transition transition_id="submit"/>
+ </state>
+ <state state_id="rejected" title="Rejected by a reviwer">
+  <description>The changes have been rejected by a reviewer.</description>
+ </state>
+ <state state_id="submitted"
+        title="Submitted and pending review">
+  <description>Waiting on a reviewer to accept the patch and apply it to the correct content</description>
+  <exit-transition transition_id="apply"/>
+  <exit-transition transition_id="reject"/>
+ </state>
+ <transition transition_id="apply"
+             title="Reviewer applies changes"
+             new_state="applied" trigger="USER"
+             before_script="" after_script="">
+  
+  <guard>
+  </guard>
+ </transition>
+ <transition transition_id="reject"
+             title="Reviewer rejects changes"
+             new_state="rejected" trigger="USER"
+             before_script="" after_script="">
+  
+  <guard>
+  </guard>
+ </transition>
+ <transition transition_id="submit"
+             title="Submit for review" new_state="submitted"
+             trigger="USER" before_script="" after_script="">
+  
+  <guard>
+  </guard>
+ </transition>
+ <variable variable_id="action" for_catalog="False"
+           for_status="True" update_always="True">
+  <description>The last transition</description>
+  <default>
+   
+   <expression>transition/getId|nothing</expression>
+  </default>
+  <guard>
+  </guard>
+ </variable>
+ <variable variable_id="actor" for_catalog="False"
+           for_status="True" update_always="True">
+  <description>The ID of the user who performed the last transition</description>
+  <default>
+   
+   <expression>user/getId</expression>
+  </default>
+  <guard>
+  </guard>
+ </variable>
+ <variable variable_id="comments" for_catalog="False"
+           for_status="True" update_always="True">
+  <description>Comments about the last transition</description>
+  <default>
+   
+   <expression>python:state_change.kwargs.get('comment', '')</expression>
+  </default>
+  <guard>
+  </guard>
+ </variable>
+ <variable variable_id="review_history" for_catalog="False"
+           for_status="False" update_always="False">
+  <description>Provides access to workflow history</description>
+  <default>
+   
+   <expression>state_change/getHistory</expression>
+  </default>
+  <guard>
+   <guard-permission>View</guard-permission>
+  </guard>
+ </variable>
+ <variable variable_id="time" for_catalog="False"
+           for_status="True" update_always="True">
+  <description>Time of the last transition</description>
+  <default>
+   
+   <expression>state_change/getDateTime</expression>
+  </default>
+  <guard>
+  </guard>
+ </variable>
+</dc-workflow>

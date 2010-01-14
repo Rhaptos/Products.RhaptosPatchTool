@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="here/main_template/macros/master"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="rhaptos">
+
+  <body>
+    
+    <div metal:fill-slot="main"
+         tal:define="m python:here.content.getRhaptosObject(here.orig_id, here.orig_version);
+                     getInfoFor python:here.portal_workflow.getInfoFor;
+                     state python:here.portal_workflow.getInfoFor(here, 'review_state')">
+      
+      <h1 i18n:translate="heading_suggested_edits_for_object">Suggested Edits for 
+	<span i18n:name="obj_title">
+	  <span tal:replace="m/title">[title]</span>
+	</span></h1>
+      
+      <table class="listing" style="margin-top: 3ex; margin-bottom: 1.5ex">
+	<tr>
+	  <th colspan="2" style="padding: 3px 0px">
+	    <b i18n:translate="text_about_these_edits">About These Edits</b>
+	  </th></tr>
+	<tr>
+	  <td><b i18n:translate="text_status_header">Status:</b></td>
+	  <td class="private">
+	    <span tal:content="structure state/capitalize">&#160;</span>
+	  </td>
+	</tr>
+	
+	<tal:block tal:repeat="action python:getInfoFor(here, 'review_history')">
+	  <tal:block tal:condition="python:action['review_state'] != 'created'">
+	  <tr>
+	    <td style="white-space: nowrap; padding-top: 1ex">
+	      <b i18n:translate="text_review_state_and_submitter">
+		  <span tal:replace="action/review_state/capitalize" i18n:name="state">[actioned]</span> by:</b>
+	      </td>
+	      <td style="padding-top: 1ex">
+		<tal:badauthor tal:define="user python:here.desecured.getMemberById(action['actor'])"
+		  tal:on-error="string:(${user/id})">
+		  <a tal:content="python:user.getProperty('fullname')"
+		  tal:attributes="href string:/member_profile/${user/id}">[actor]</a>
+		</tal:badauthor></td>
+	  </tr>
+	  <tr>
+	    <td><b i18n:translate="text_on_header">On:</b></td>
+	      <td tal:content="action/time/aCommon">[time]</td>
+	  </tr>
+	  <tr>
+	    <td style="white-space: nowrap">
+		<b i18n:translate="text_with_message_header">With Message:</b></td>
+	    <td tal:content="action/comments">[message]</td>
+	  </tr>
+	  </tal:block>
+	</tal:block>
+
+	<tr>
+	  <td style="padding-top: 1ex; white-space: nowrap">
+	    <b i18n:translate="text_original_object_header">Original Object:</b></td>
+	  <td style="padding-top: 1ex">
+	    <a href="" tal:attributes="href m/url" tal:content="m/title">[Object]</a>     
+	  </td>
+	</tr>
+	<tr>
+	  <td style="white-space: nowrap">
+	    <b i18n:translate="text_original_version_header">Original Version:</b></td>
+	  <td tal:content="m/version">[Version]</td>
+	</tr>
+      </table>
+
+
+	<form action="." method="post" style="margin: 1.5ex 0ex" tal:attributes="action template/getId">
+	  
+	  <table tal:define="workspaces python:context.getWorkspaces({'folder':None});
+	                     modwgs python:[x for x in workspaces if m.objectId in x['folder'].objectIds()];
+	                     nomodwgs python:[x for x in workspaces if m.objectId not in x['folder'].objectIds()];
+	                     radios python:len(modwgs) + (not not len(nomodwgs))">
+	    <tr>
+	      <td valign="top" tal:attributes="rowspan python:radios + 1">
+		<input class="standalone" type="submit" name="form.button.apply"
+                       value="Apply In:" i18n:attributes="value value_patch_apply_in" />
+	      </td>
+	      <th tal:condition="python:radios > 1">
+		<b i18n:translate="text_workspaces">Workspaces</b></th>
+	    </tr>
+	    <tal:block tal:repeat="wg modwgs">
+	      <tr>
+		<td>
+		  <input tal:condition="python:radios > 1" type="radio" name="workspace" tal:attributes="value wg/folder/getId" />
+		  <input tal:condition="python:radios == 1" type="hidden" name="workspace" tal:attributes="value wg/folder/getId" />
+		  <a tal:content="wg/title" tal:attributes="href wg/folder/absolute_url" />
+		</td>
+	      </tr>
+	    </tal:block>
+	    <tr tal:condition="nomodwgs">
+	      <td>
+		<input tal:condition="python:radios == 1" type="hidden" name="workspace" value="__other__" />
+		<tal:block tal:condition="python:radios > 1">
+		  <input type="radio" name="workspace" value="__other__"/>
+                  <span i18n:translate="text_other_header">Other:</span>
+                </tal:block>
+		<select name="otherspace" tal:define="target request/target | nothing">
+		  <option tal:repeat="wg nomodwgs" tal:attributes="value wg/folder/getId"
+                          tal:content="wg/title">[workgroup]</option>
+		</select>
+	      </td>
+	    </tr>
+	    <tr>
+	      <td colspan="2">
+		<input class="standalone" 
+		  type="submit" 
+		  name="form.button.reject" 
+		  value="Reject" 
+		  i18n:attributes="value value_reject_patch" /></td>
+	    </tr>
+	  </table>
+
+	   <input type="hidden" name="form.submitted" value="1" />
+	</form>
+
+
+      <h1 style="margin-top: 0.5em" i18n:translate="heading_details">Details</h1>
+
+      <metal:block metal:use-macro="here/changeset_view/macros/changeset"/>
+      
+    </div>
+
+  </body>
+</html>

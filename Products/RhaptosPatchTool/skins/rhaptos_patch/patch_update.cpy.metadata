@@ -1,0 +1,4 @@
+[actions]
+action.rejected = redirect_to:string:patches
+action.applied = redirect_to_action:string:view
+action.failure = traverse_to:string:patch_conflict

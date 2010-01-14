@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"
+      xmlns:metal="http://xml.zope.org/namespaces/metal" 
+      xmlns:tal="http://xml.zope.org/namespaces/tal" 
+      metal:use-macro="here/main_template/macros/master"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="rhaptos">
+
+  <body>
+
+    <div metal:fill-slot="main" 
+         tal:define="errors python:request.get('errors', {});
+                     pt here/portal_patch;">
+     
+      <h1 i18n:translate="heading_patch_conflict">Conflict while applying suggested edits</h1>
+
+      <pre tal:content="options/error|request/error|nothing"
+	i18n:translate="">[patch error]</pre>
+      <p i18n:translate="description_patch_error_occured">
+	The above error occurred while attempting to apply the edits.
+	This may be because:
+      </p>
+      <ul>
+	<li i18n:translate="text_patch_local_mods">You have made local
+	    modifications that are conflict with these edits, or</li>
+	<li i18n:translate="text_patch_wrong_version">The edits were
+	    made against an older, incompatible version of the content</li>
+      </ul>
+      <p i18n:translate="text_patch_contact_submitter">
+	You may need to contact the submitter to work out differences.
+      </p>
+    </div><!-- End of slot -->
+  </body>
+  
+</html>

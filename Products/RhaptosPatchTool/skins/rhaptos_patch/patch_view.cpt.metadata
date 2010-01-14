@@ -1,0 +1,10 @@
+[default]
+title=View Suggested Edits
+
+[validators]
+validators = validate_patch_selection
+validators..reject =
+
+[actions]
+action.success = traverse_to:string:patch_status
+action.failure = traverse_to:string:patch_view

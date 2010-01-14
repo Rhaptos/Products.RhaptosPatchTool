@@ -1,0 +1,21 @@
+PatchTool-0.6
+  - Module Edit Workflow (DATE)
+    - DETAILS HERE      
+  
+PatchTool-0.5.1
+  - templates tweaked to pass through xsltproc
+
+PatchTool-0.5
+  - upgrade to Plone 2.5
+
+PatchTool-0.4
+  - i18n Translation Support
+
+PatchTool-0.3
+  - Changed author names to link to new member profile page
+
+PatchTool-0.2
+  - Renamed RISA to Rhaptos
+
+PatchTool-0.1
+  - Initial release
