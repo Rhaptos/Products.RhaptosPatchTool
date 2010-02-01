@@ -1,3 +1,6 @@
+PatchTool-0.7
+  - generic setup refactor. Rhaptos 2.0 release
+
 PatchTool-0.6
   - Module Edit Workflow (DATE)
     - DETAILS HERE      
