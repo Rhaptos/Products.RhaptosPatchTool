@@ -48,7 +48,6 @@
 	              i18n:translate="">Validation error output</div>
 
                   <textarea name="message" 
-                            wrap="soft" 
                             style="width: 50%" cols="50" 
                             rows="5"
                             tabindex=""
