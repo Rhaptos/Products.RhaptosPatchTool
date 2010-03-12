@@ -42,7 +42,7 @@
               i18n:translate="box_label_patches_view_all">View All</a></strong>
         </dd>
       </dl>
-      <tal:no-longer-supported>
+      </tal:no-longer-supported>
     </div>
   </body>
 </html>
