@@ -9,6 +9,8 @@ This software is subject to the provisions of the GNU Lesser General
 Public License Version 2.1 (LGPL).  See LICENSE.txt for details.
 """
 
+from zope.interface import implements
+
 import AccessControl
 from Globals import InitializeClass
 from DateTime import DateTime
@@ -25,7 +27,7 @@ class PatchTool (UniqueObject, PortalFolder):
     user and allows them to accept or decline
     """
 
-    __implements__ = IPatchTool
+    implements(IPatchTool)
 
     id = 'portal_patch'
     title = 'Patches'
