@@ -14,7 +14,7 @@ from Globals import InitializeClass
 from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.CMFCore.utils import UniqueObject
-from Products.CMFCore.CMFCorePermissions import ManagePortal
+from Products.CMFCore.permissions import ManagePortal
 from Products.CMFCore.PortalFolder import PortalFolder
 
 from interfaces.portal_patch import portal_patch as IPatchTool

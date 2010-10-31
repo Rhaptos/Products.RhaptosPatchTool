@@ -8,7 +8,7 @@ This software is subject to the provisions of the GNU Lesser General
 Public License Version 2.1 (LGPL).  See LICENSE.txt for details.
 """
 
-from Products.CMFCore.CMFCorePermissions import ModifyPortalContent, View, \
+from Products.CMFCore.permissions import ModifyPortalContent, View, \
      AccessContentsInformation
 from Products.CMFCalendar.EventPermissions import ChangeEvents
 
@@ -16,7 +16,7 @@ from Products.CMFCore.WorkflowTool import addWorkflowFactory
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from Products.DCWorkflow.Default import setupDefaultWorkflowRev2
 
-from Products.CMFCore.CMFCorePermissions import RequestReview, ReviewPortalContent
+from Products.CMFCore.permissions import RequestReview, ReviewPortalContent
      
 def configureEventPermissions(wf):
     """ Since events use a unique set of Permissions we 
