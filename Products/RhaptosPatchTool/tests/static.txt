@@ -13,6 +13,7 @@ being correctly implemented::
     True
     >>> PatchTool.meta_type == 'CMF Patch Tool'
     True
-    >>> type(PatchTool.__implements__)
-    <class 'Interface._InterfaceClass.Interface'>
+    >>> from zope.interface import implementedBy
+    >>> list(implementedBy(PatchTool))
+    [<class 'Interface._InterfaceClass.Interface'>]
 
