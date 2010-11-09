@@ -13,7 +13,6 @@ from Products.CMFCore.DirectoryView import registerDirectory
 from Products.CMFCore import utils
 
 import PatchTool
-import PatchWorkflow
 
 this_module = sys.modules[ __name__ ]
 product_globals = globals()
