@@ -79,7 +79,7 @@
 	    <td>
 	      <tal:badauthor tal:define="user python:here.desecured.getMemberById(getInfoFor(obj, 'actor'))"
 		tal:on-error="string:(${user/id})">
-		<a tal:content="python:user.getProperty('fullname')"
+		<a tal:content="user/fullname"
 		  tal:attributes="href string:/member_profile/${user/id}">[submitter]</a>
 	      </tal:badauthor></td>
 	    <td tal:content="python:getInfoFor(obj, 'time').aCommon()">[time]</td>
@@ -124,7 +124,7 @@
 	    <td>
 		<tal:badauthor tal:define="user python:here.desecured.getMemberById(getInfoFor(obj, 'actor'));"
 		  tal:on-error="string:(${user/id})">
-		  <a tal:define="name python:user.getProperty('fullname')"
+		  <a tal:define="name user/fullname"
 		    tal:content="python:test(review_state=='submitted', '', name)"
 		    tal:attributes="href string:/member_profile/${user/id}">[reviewer]</a>
 		</tal:badauthor></td>

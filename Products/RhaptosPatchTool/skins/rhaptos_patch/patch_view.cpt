@@ -42,7 +42,7 @@
 	      <td style="padding-top: 1ex">
 		<tal:badauthor tal:define="user python:here.desecured.getMemberById(action['actor'])"
 		  tal:on-error="string:(${user/id})">
-		  <a tal:content="python:user.getProperty('fullname')"
+		  <a tal:content="user/fullname"
 		  tal:attributes="href string:/member_profile/${user/id}">[actor]</a>
 		</tal:badauthor></td>
 	  </tr>
